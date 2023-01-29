@@ -64,6 +64,16 @@ app.get('/collections/:collectionName', function (req, res, next) {
    });
 });
 
+app.get('/collections/:collectionName/search', function (req, res, next) {
+   const searchTerm = req.query.q;
+   req.collection.find({ location: { $regex: new RegExp(searchTerm, 'i') } }).toArray(function (err, results) {
+      if (err) {
+         return next(err);
+      }
+      res.send(results);
+   });
+});
+
 //For order submit
 app.post('/collections/:collectionName', function (req, res, next) {
    req.collection.insertOne(req.body, function (err, results) {
@@ -87,14 +97,14 @@ app.put('/collections/:collectionName/:id', function (req, res, next) {
    );
 });
 
-app.get('/collections/:collectionName/search', async (req, res) => {
+/* app.get('/collections/:collectionName/search', async (req, res) => {
    const searchTerm = req.query.q;
    console.log(searchTerm)
    const results = await performSearch(searchTerm);
    res.json({ results });
- });
+ }); */
 
-async function performSearch(searchTerm) {
+/* async function performSearch(searchTerm) {
 
    console.log(searchTerm)
    //let client;
@@ -112,10 +122,7 @@ async function performSearch(searchTerm) {
    } catch (err) {
       console.error(err.message);
    } 
-   /* finally {
-      client.close();
-   } */
-}
+} */
 
 /*
 app.delete("/", function(req, res) {
