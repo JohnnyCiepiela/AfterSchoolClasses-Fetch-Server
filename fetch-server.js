@@ -74,6 +74,16 @@ app.get('/collections/:collectionName/search', function (req, res, next) {
    });
 });
 
+app.get('/collections/:collectionName/search', function (req, res, next) {
+   const searchTerm = req.query.q;
+   req.collection.find({ title: { $regex: new RegExp(searchTerm, 'i') } }).toArray(function (err, results) {
+      if (err) {
+         return next(err);
+      }
+      res.send(results);
+   });
+});
+
 //For order submit
 app.post('/collections/:collectionName', function (req, res, next) {
    req.collection.insertOne(req.body, function (err, results) {
@@ -96,33 +106,6 @@ app.put('/collections/:collectionName/:id', function (req, res, next) {
       }
    );
 });
-
-/* app.get('/collections/:collectionName/search', async (req, res) => {
-   const searchTerm = req.query.q;
-   console.log(searchTerm)
-   const results = await performSearch(searchTerm);
-   res.json({ results });
- }); */
-
-/* async function performSearch(searchTerm) {
-
-   console.log(searchTerm)
-   //let client;
-   try {
-      //client = await MongoClient.connect(url, { useNewUrlParser: true });
-      //const db = client.db(dbName);
-      //const items = db.collection('lessons');
-
-      // Search for items whose name property matches the search term
-      const results = await collection.find({ location: { $regex: new RegExp(searchTerm, 'i') } }).toArray();
-
-      console.log(results)
-      return results;
-   
-   } catch (err) {
-      console.error(err.message);
-   } 
-} */
 
 /*
 app.delete("/", function(req, res) {
