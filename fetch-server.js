@@ -87,23 +87,24 @@ app.put('/collections/:collectionName/:id', function (req, res, next) {
    );
 });
 
-app.get('/search', (req, res) => {
+app.get('/collections/:collectionName/search', async (req, res) => {
    const searchTerm = req.query.q;
-   // Perform the search and retrieve the results
-   const results = performSearch(searchTerm);
+   console.log(searchTerm)
+   const results = await performSearch(searchTerm);
    res.json({ results });
-});
+ });
 
 async function performSearch(searchTerm) {
 
+   console.log(searchTerm)
    //let client;
    try {
       //client = await MongoClient.connect(url, { useNewUrlParser: true });
       //const db = client.db(dbName);
-      const items = db.collection('lessons');
+      //const items = db.collection('lessons');
 
       // Search for items whose name property matches the search term
-      const results = await items.find({ name: { $regex: new RegExp(searchTerm, 'i') } }).toArray();
+      const results = await collection.find({ location: { $regex: new RegExp(searchTerm, 'i') } }).toArray();
 
       console.log(results)
       return results;
